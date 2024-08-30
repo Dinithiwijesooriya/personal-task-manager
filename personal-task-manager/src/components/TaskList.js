@@ -9,17 +9,19 @@ function TaskList({ tasks, toggleTaskCompletion, removeTask, editTask }) {
     setEditingText(task.text);
   };
 
-  const handleSave = (index) => {
-    if (editTask) { // Check if editTask is a function
-      editTask(index, editingText);
+  const handleSave = async (index) => {
+    try {
+      await editTask(index, editingText);
+      setEditingIndex(null);
+    } catch (error) {
+      console.error("Error saving task:", error);
     }
-    setEditingIndex(null);
   };
 
   return (
     <ul>
       {tasks.map((task, index) => (
-        <li key={index} style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
+        <li key={task._id} style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
           {editingIndex === index ? (
             <input
               type="text"
@@ -51,6 +53,9 @@ function TaskList({ tasks, toggleTaskCompletion, removeTask, editTask }) {
 }
 
 export default TaskList;
+
+
+
 
 
 //The TaskList component takes tasks and removeTask as props.
