@@ -3,8 +3,13 @@ import './App.css';
 import TaskInput from './components/TaskInput';
 import TaskList from './components/TaskList';
 import axios from 'axios';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './components/Login'; // Your login component
+import Register from './components/Register'; // Your register component
+import PrivateRoute from './components/PrivateRoute'; // Protected route component
 
-function App() {
+
+function TaskManager() {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('all');
 
@@ -83,8 +88,17 @@ function App() {
   );
 }
 
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<PrivateRoute element={<TaskManager />} />} />
+      </Routes>
+    </Router>
+  );
+}
+
 export default App;
-
-
-
 
