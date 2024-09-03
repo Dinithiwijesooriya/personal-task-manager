@@ -4,10 +4,9 @@ import TaskInput from './components/TaskInput';
 import TaskList from './components/TaskList';
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './components/Login'; // Your login component
-import Register from './components/Register'; // Your register component
-import PrivateRoute from './components/PrivateRoute'; // Protected route component
-
+import Login from './components/Login';
+import Register from './components/Register';
+import PrivateRoute from './components/PrivateRoute';
 
 function TaskManager() {
   const [tasks, setTasks] = useState([]);
@@ -23,13 +22,13 @@ function TaskManager() {
   };
 
   useEffect(() => {
-    refreshTasks(); // Fetch tasks when component mounts
+    refreshTasks();
   }, []);
 
   const addTask = async (text) => {
     try {
       await axios.post('http://localhost:5000/tasks', { text, completed: false });
-      refreshTasks(); // Refresh tasks after adding
+      refreshTasks();
     } catch (error) {
       console.error("Error adding task:", error);
     }
@@ -39,7 +38,7 @@ function TaskManager() {
     try {
       const updatedTask = { ...tasks[index], completed: !tasks[index].completed };
       await axios.put(`http://localhost:5000/tasks/${tasks[index]._id}`, updatedTask);
-      refreshTasks(); // Refresh tasks after toggling completion
+      refreshTasks();
     } catch (error) {
       console.error("Error toggling completion:", error);
     }
@@ -48,7 +47,7 @@ function TaskManager() {
   const removeTask = async (index) => {
     try {
       await axios.delete(`http://localhost:5000/tasks/${tasks[index]._id}`);
-      refreshTasks(); // Refresh tasks after removing
+      refreshTasks();
     } catch (error) {
       console.error("Error removing task:", error);
     }
@@ -57,7 +56,7 @@ function TaskManager() {
   const editTask = async (index, newText) => {
     try {
       await axios.put(`http://localhost:5000/tasks/${tasks[index]._id}`, { text: newText, completed: tasks[index].completed });
-      refreshTasks(); // Refresh tasks after editing
+      refreshTasks();
     } catch (error) {
       console.error("Error editing task:", error);
     }
@@ -70,13 +69,28 @@ function TaskManager() {
   });
 
   return (
-    <div className="App">
-      <h1>Personal Task Manager</h1>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">Personal Task Manager</h1>
       <TaskInput addTask={addTask} />
-      <div>
-        <button onClick={() => setFilter('all')}>All</button>
-        <button onClick={() => setFilter('active')}>Active</button>
-        <button onClick={() => setFilter('completed')}>Completed</button>
+      <div className="flex space-x-4 my-4">
+        <button
+          onClick={() => setFilter('all')}
+          className={`px-4 py-2 rounded-lg ${filter === 'all' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow hover:bg-blue-600`}
+        >
+          All
+        </button>
+        <button
+          onClick={() => setFilter('active')}
+          className={`px-4 py-2 rounded-lg ${filter === 'active' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow hover:bg-blue-600`}
+        >
+          Active
+        </button>
+        <button
+          onClick={() => setFilter('completed')}
+          className={`px-4 py-2 rounded-lg ${filter === 'completed' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow hover:bg-blue-600`}
+        >
+          Completed
+        </button>
       </div>
       <TaskList
         tasks={filteredTasks}
@@ -101,4 +115,3 @@ function App() {
 }
 
 export default App;
-
